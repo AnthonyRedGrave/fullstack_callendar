@@ -19,7 +19,8 @@ class BlogCategoryDetailSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_posts(obj):
-        return BlogPostSerializer(BlogPost.objects.filter(blog_category=obj), many=True).data
+        posts = BlogPost.objects.filter(blog_category=obj, in_archive=False)
+        return BlogPostSerializer(posts, many=True).data
 
     class Meta:
         model = BlogCategory

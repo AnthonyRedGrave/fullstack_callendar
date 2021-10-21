@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom'
 
 function NavBar() {
 
@@ -27,7 +28,7 @@ function NavBar() {
             <ul class="navbar-nav">
                 {categories.map(category=>(
                     <li class="nav-item">
-                        <a class="nav-link" key={category.id} href="#">{category.name}</a>
+                        <Link className="nav-link" to={{ pathname: `/category/${category.id}/`, fromDashboard: false }}>{category.name}</Link>
                     </li>
                 ))}
                 
