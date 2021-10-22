@@ -4,7 +4,7 @@ import axios from 'axios'
 import {Redirect} from 'react-router-dom' 
 
 
-function Login(){
+function Registration(){
 
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
@@ -14,7 +14,7 @@ function Login(){
         e.preventDefault();
 
         axios({
-            url: "http://127.0.0.1:8000/api/token/",
+            url: "http://localhost:8000/api/auth/users/",
             method: "POST",
             data:{ 
                 username: login,
@@ -23,8 +23,7 @@ function Login(){
 
         })
         .then(response=>{
-            localStorage.setItem('access_token', response.data.access)
-            localStorage.setItem('refresh_token', response.data.refresh)
+            console.log(response.data)
             setRedirect(true)
         })
 
@@ -32,12 +31,12 @@ function Login(){
     }
 
     if (redirect){
-        return <Redirect to="/"/>
+        return <Redirect to="/login"/>
     }
 
     return (
         <div>
-            <h1>Вход</h1>
+            <h1>Регистрация нового пользователя</h1>
             <form onSubmit={submit}>
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlInput1" className="form-label">Логин</label>
@@ -60,4 +59,4 @@ function Login(){
 
 }
 
-export default Login;
+export default Registration;

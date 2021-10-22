@@ -4,6 +4,9 @@ import {Switch, BrowserRouter as Router, Route} from 'react-router-dom'
 import NavBar from './Nav/NavBar.js'
 import './App.css';
 import Login from './Auth/Login.js'
+import Registration from './Auth/Registration.js'
+import ProtectedRoute from './ProtectedRoute/ProtectedRoute.js'
+
 import Main from './Main/Main.js'
 
 
@@ -16,7 +19,8 @@ function App() {
         <NavBar/>
         <Switch>
           <Route path="/login" component={Login}/>
-          <Route path="/main" exact component={Main}/>
+          <ProtectedRoute exact path="/" component={Main}/>
+          <Route path="/registration" component={Registration}/>
 
         </Switch>
       </Router>

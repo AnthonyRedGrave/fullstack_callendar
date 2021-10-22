@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom'
 
+
 function NavBar() {
-
-
+  const access = localStorage.getItem('access_token')
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
@@ -12,9 +12,15 @@ function NavBar() {
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-                <li className="nav-item">
+                {!access && <li className="nav-item">
                     <Link className="nav-link" to={{ pathname: "/login/", fromDashboard: false }}>Вход</Link>
-                </li>
+                </li>}
+                {!access && <li className="nav-item">
+                    <Link className="nav-link" to={{ pathname: "/registration/", fromDashboard: false }}>Регистрация</Link>
+                </li>}
+                {access && <li className="nav-item">
+                    <Link className="nav-link"  to={{ pathname: "/own/", fromDashboard: false }}>Личный кабинет</Link>
+                </li>}
             </ul>
             </div>
         </div>
