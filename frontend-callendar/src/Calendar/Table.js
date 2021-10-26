@@ -1,19 +1,148 @@
-import React from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import './Table.css';
+
+const months = { // список месяцов
+            0: "January",
+            1: "February",
+            2: "March",
+            3: "April",
+            4: "May",
+            5: "June",
+            6 :"July",
+            7 :"August",
+            8 :"September",
+            9 :"October",
+            10 :"November",
+            11 :"December",
+        };
 
 function Table(){
 
+    const [prevMonths, setPrevMonth] = useState([])
+    const [currMonths, setCurrMonths] = useState([])
+    const [nextMonths, setNextMonth] = useState([])
+    const [date, setDate] = useState(new Date()) // текущая дата
+    const [currMonth, setCurrMonth] = useState('')
+
+    const getPrevDays = () =>{ 
+
+        const prevlastDayIndex = new Date( // номер в недели последний день месяца
+            date.getFullYear(),
+            date.getMonth(),
+            0
+        ).getDay();
+
+        const prevLastDay = new Date( // предыдущий последний день
+            date.getFullYear(),
+            date.getMonth(),
+            0
+        ).getDate();
+
+        let copyPrevDays = [];
+        for (let x = prevlastDayIndex; x > 0; x--) { // получение предыдущих дней месяца
+            copyPrevDays.push(prevLastDay - x + 1)
+        }
+        setPrevMonth(copyPrevDays)
+    }
+
+    const getCurrDays = () =>{
+        // получение дней этого месяца
+
+        const lastDay = new Date( // последний день месяца
+            date.getFullYear(),
+            date.getMonth()+1,
+            0
+        ).getDate();
+
+        let copyCurrDays = [];
+        for (let i = 1; i <= lastDay; i++) {
+            if (i === new Date().getDate() && date.getMonth() === new Date().getMonth()) {
+                copyCurrDays.push({
+                                    day: i,
+                                    class: "today"
+                                  })
+            } 
+            else {
+                copyCurrDays.push({
+                                    day: i,
+                                    class: "none"
+                                  })
+            }
+        }
+        setCurrMonths(copyCurrDays)
+    }
+
+    const getNextDays = () =>{
+        // получение следующих первых дней
+
+        const lastDayIndex = new Date( // номер последнего дня в месяце в недели ( 0- воскресенье, 1-понедельник, 6 - суббота)
+            date.getFullYear(),
+            date.getMonth() + 1,
+            0
+        ).getDay();
+
+
+        const nextDays = 7 - lastDayIndex;
+
+        let copyNextDays = []
+
+        for (let j = 1; j <= nextDays; j++) {
+            copyNextDays.push(j)
+        }
+
+        setNextMonth(copyNextDays)
+    }
+
+    
+
+    const date_p = useCallback( // ref дата
+        node => {
+            if (node !== null) {
+                node.innerHTML = new Date().toDateString()
+                setCurrMonth(months[new Date().getMonth()])
+            }
+        },
+        [],
+    )
+    const monthDays = useCallback( // ref дни
+        node => {
+            if (node !== null) {
+                console.log(node)
+            }
+        },
+        [],
+    )
+
+
+    const clickPrev = () => {
+        date.setMonth(date.getMonth() -1)
+        setCurrMonth(months[date.getMonth()])
+    };
+
+    const clickNext= () => {
+        date.setMonth(date.getMonth()+1)
+
+        setCurrMonth(months[date.getMonth()])
+    };
+    
+
+    useEffect(()=>{
+        getPrevDays();
+        getCurrDays();
+        getNextDays();
+    }, [currMonth])
+    
 
     return (
         <div className="container">
             <div className="calendar">
                 <div className="month">
-                    <h1>&larr;</h1>	
+                    <h1 className="prev" onClick={clickPrev}>&larr;</h1>	
                     <div className="date">
-                        <h1>May</h1>
-                        <p>Fri May 29, 2020</p>
+                        <h1>{currMonth}</h1>
+                        <p ref={date_p}>{new Date().toDateString()}</p>
                     </div>
-                    <h1>&rarr;</h1>
+                    <h1 className="next" onClick={clickNext}>&rarr;</h1>
                 </div>
                 <div className="weekdays">
                     <div>Mon</div>
@@ -24,51 +153,17 @@ function Table(){
                     <div>Sat</div>
                     <div>Sun</div>
                 </div>
-                <div className="days">
-                    <div className="prev-date">26</div>
-                    <div className="prev-date">27</div>
-                    <div className="prev-date">28</div>
-                    <div className="prev-date">29</div>
-                    <div className="prev-date">30</div>
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                    <div>4</div>
-                    <div>5</div>
-                    <div>6</div>
-                    <div>7</div>
-                    <div>8</div>
-                    <div>9</div>
-                    <div>10</div>
-                    <div>11</div>
-                    <div>12</div>
-                    <div>13</div>
-                    <div>14</div>
-                    <div>15</div>
-                    <div>16</div>
-                    <div>17</div>
-                    <div>18</div>
-                    <div>19</div>
-                    <div>20</div>
-                    <div>21</div>
-                    <div>21</div>
-                    <div>22</div>
-                    <div>23</div>
-                    <div>24</div>
-                    <div>25</div>
-                    <div>26</div>
-                    <div>27</div>
-                    <div>28</div>
-                    <div>29</div>
-                    <div>30</div>
-                    <div>31</div>
-                    <div className="next-date">1</div>
-                    <div className="next-date">2</div>
-                    <div className="next-date">3</div>
-                    <div className="next-date">4</div>
-                    <div className="next-date">5</div>
+                <div className="days" ref={monthDays}>
+                    {prevMonths.map(p => (
+                        <div className="prev-date">{p}</div>
+                    ))}
+                    {currMonths.map(d => (
+                        <div className={d.class}>{d.day}</div>
+                    ))}
+                    {nextMonths.map(n =>(
+                        <div className="next-date">{n}</div>
+                    ))}
 
-                    
                 </div>
             </div>
         </div>
