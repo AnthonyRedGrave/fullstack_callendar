@@ -1,29 +1,29 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+// import { useState, useEffect } from 'react'
+// import axios from 'axios'
+import {Switch, BrowserRouter as Router, Route} from 'react-router-dom'
+import NavBar from './Nav/NavBar.js'
 import './App.css';
+import Login from './Auth/Login.js'
+import Registration from './Auth/Registration.js'
+import ProtectedRoute from './ProtectedRoute/ProtectedRoute.js'
+
+import Main from './Main/Main.js'
+
 
 function App() {
 
-  const [people, setPeople] = useState([])
-
-  useEffect(()=>{
-    axios({
-      method: "GET",
-      url: "http://127.0.0.1:8000/api/test-api/"
-    })
-    .then(response =>{
-      setPeople(response.data)
-    })
-  }, [])
 
   return (
     <div className="App">
-      <h1>Hello123</h1>
-      <ul>
-        {people.map(p => (
-          <li key={p.id}>{p.name}</li>
-        ))}
-      </ul>
+      <Router>
+        <NavBar/>
+        <Switch>
+          <Route path="/login" component={Login}/>
+          <ProtectedRoute exact path="/" component={Main}/>
+          <Route path="/registration" component={Registration}/>
+
+        </Switch>
+      </Router>
     </div>
   );
 }
