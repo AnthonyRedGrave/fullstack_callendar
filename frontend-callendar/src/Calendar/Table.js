@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import './Table.css';
+import Diary from '../Calendar/Diary/Diary.js'
 
 const months = { // список месяцов
             0: "January",
@@ -166,6 +167,7 @@ function Table(){
 
                 </div>
             </div>
+            <Diary/>
         </div>
 
 

@@ -19,9 +19,6 @@ function Main() {
 
   return (
     <div>
-        <h1>
-            Home
-        </h1>
         <Table/>
     </div>
 
